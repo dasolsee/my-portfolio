@@ -1,9 +1,11 @@
+import styles from './Skills.module.css'
+
 function Skills() {
     return (
         <section id ="skills" aria-labelledby="skills-title">
             <div className="container">
                 <h2 id="skills-title">SKILLS</h2>
-
+                <div className={styles.groups}>
                 <div>
                     <h3>Language</h3>
                     <ul>
@@ -31,6 +33,7 @@ function Skills() {
                         <li>GitHub</li>
 
                     </ul>
+                </div>
                 </div>
             </div>
             </section>

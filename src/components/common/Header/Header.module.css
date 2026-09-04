@@ -1,0 +1,26 @@
+.header { /* 헤더가 화면 전체 너비를 사용하도록 설정 */
+    width: 100%;
+    border-bottom: 1px solid var(--gray-300);
+    position: sticky; /*스크롤해도 헤더가 화면에 남음*/
+    top: 0;
+    z-index: 100; /*콘텐츠보다 앞에 보임*/
+    background: var(--gray-0);
+
+}
+
+.inner { /* 로고와 메뉴를 가로로 배치하고 양쪽 끝으로 정렬 */
+    min-height: var(--header-height); /* 헤더 높이를 var.css 에서 정한 헤더 높이를 공통으로 사용한다 */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font: var(--font-logo);
+}
+
+.menu {/* Navigation과 Archive 사이의 간격을 관리한다 */
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}

@@ -1,0 +1,64 @@
+/* 프로젝트 카드 2열 배치 */
+.grid {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(28rem, 1fr));
+    gap: 1.5rem;
+}
+
+/* 프로젝트 카드 기본 구조 */
+.card {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border-radius: var(--radius-lg);
+    background: var(--gray-100);
+}
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-pill);
+    background: var(--yellow-200);
+}
+
+/* 기간, 역할, 기술 스택 정렬 */
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.info > div {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 1rem;
+}
+
+.features {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-300);
+}
+
+.features ul {
+    margin-top: 0.5rem;
+}
+
+.links {
+    padding-top: 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+    border-top: 1px solid var(--gray-300);
+}
+
+.links a {
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    background: var(--blue-100);
+}

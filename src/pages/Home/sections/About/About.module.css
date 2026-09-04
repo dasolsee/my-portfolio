@@ -1,0 +1,24 @@
+.content {
+    display: flex; /*글과 프로필 가로로배치*/
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    margin-top: 3rem;
+}
+
+.profile {
+    width: 20rem;
+    height: 25rem;
+    flex-shrink: 0; /*왼쪽 글이 길어져도 이미지 영역이 찌그러지지 않게*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gray-100);
+}
+
+.text { /*왼쪽 글 세로 간격*/
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}

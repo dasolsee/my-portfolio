@@ -1,16 +1,16 @@
-
+import styles from './Projects.module.css'
 
 function ProjectCard() {
     return (
-        <article>
-            <header>
+        <article className={styles.card}>
+            <header className={styles.cardHeader}>
                 <h3>프로젝트명</h3>
-                <span>수상</span>
+                <span className={styles.badge}>수상</span>
             </header>
 
             <p>프로젝트 설명</p>
 
-            <dl>
+            <dl className={styles.info}>
                 <div>
                     <dt>기간</dt>
                     <dd>2022.10~ 2022.11</dd>
@@ -26,13 +26,14 @@ function ProjectCard() {
                     <dd>Java, Spring Boot, MySQL</dd>
                 </div>
             </dl>
-            <div>
+
+            <div className={styles.features}>
                 <h4>주요 구현 내용</h4>
                 <ul>
                     <li>주요 구현 내용을 작성해주세요.</li>
                 </ul>
             </div>
-            <footer>
+            <footer className={styles.links}>
                 <a
                     href="https://github.com/dasolsee/저장소"
                     target="_blank"

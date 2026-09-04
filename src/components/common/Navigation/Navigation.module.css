@@ -1,0 +1,5 @@
+.list { /* 내비게이션 메뉴 항목을 가로로 나열하고 각각 2rem 간격을 주었음 */
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
