@@ -12,7 +12,7 @@ function Experience() {
                             {/* 연도와 활동명을 한 줄로 묶는다 */}
                             <div className={styles.heading}>
                                 <time className={styles.date}>2026.09 - 2026.09</time>
-                                <h3>프로젝트 이름?이나 활동명</h3>
+                                <h3 className={styles.projectName}>프로젝트 이름?이나 활동명</h3>
                             </div>
 
                             <p>담당했던 역할 경험 등등..</p>

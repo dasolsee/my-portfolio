@@ -1,16 +1,24 @@
 import styles from './Contact.module.css'
+import githubIcon from '../../../../assets/icons/github.svg'
+import phoneIcon from '../../../../assets/icons/phone.svg'
+import emailIcon from '../../../../assets/icons/email.svg'
 
 function Contact() {
     return (
         <section id="contact" aria-labelledby="contact-title">
             <div className="container">
-                <h2 id="contact-title">CONTACT</h2>
+                <h2 id="contact-title">Contact</h2>
 
-                <p className={styles.intro}>
-                    개발 관련 문의사항은 편하게 연락주세요.
-                </p>
+                <div className={styles.intro}>
+                    <h3>새로운 기회와 협업을 기다립니다.</h3>
 
-                {/* 연락 수단 목록 */}
+                    <p>
+                        프로젝트와 개발에 관한 이야기를 기다리고 있어요.
+                        편한 방법으로 연락해주세요.
+                    </p>
+                </div>
+
+                {/* 연락 방법마다 전체 카드를 클릭할 수 있도록 링크로 구성 */}
                 <ul className={styles.contactList}>
                     <li>
                         <a
@@ -19,28 +27,34 @@ function Contact() {
                             target="_blank"
                             rel="noreferrer"
                         >
-                            <span
-                                className={styles.icon}
-                                aria-hidden="true"
-                            >
-                                G
+                            <span className={styles.icon}>
+                                <img src={githubIcon} alt="" />
                             </span>
-                            <span>GitHub</span>
+
+                            <span className={styles.label}>GitHub</span>
+                            <strong>github.com/dasolsee</strong>
+
+                            <span className={styles.description}>
+                                프로젝트 코드를 확인해보세요.
+                            </span>
                         </a>
                     </li>
 
                     <li>
                         <a
                             className={styles.contactLink}
-                            href="tel:010-0000-0000"
+                            href="tel:01080172579"
                         >
-                            <span
-                                className={styles.icon}
-                                aria-hidden="true"
-                            >
-                                T
+                            <span className={styles.icon}>
+                                <img src={phoneIcon} alt="" />
                             </span>
-                            <span>010-0000-0000</span>
+
+                            <span className={styles.label}>Phone</span>
+                            <strong>010-8017-2579</strong>
+
+                            <span className={styles.description}>
+                                편한 시간에 연락해주세요.
+                            </span>
                         </a>
                     </li>
 
@@ -49,16 +63,23 @@ function Contact() {
                             className={styles.contactLink}
                             href="mailto:dasol_2@naver.com"
                         >
-                            <span
-                                className={styles.icon}
-                                aria-hidden="true"
-                            >
-                                E
+                            <span className={styles.icon}>
+                                <img src={emailIcon} alt="" />
                             </span>
-                            <span>dasol_2@naver.com</span>
+
+                            <span className={styles.label}>Email</span>
+                            <strong>dasol_2@naver.com</strong>
+
+                            <span className={styles.description}>
+                                확인 후 빠르게 답변드릴게요.
+                            </span>
                         </a>
                     </li>
                 </ul>
+
+                <p className={styles.closing}>
+                    언제든 편하게 연락해주세요 :)
+                </p>
             </div>
         </section>
     )

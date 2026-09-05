@@ -19,8 +19,14 @@
     font: var(--font-logo);
 }
 
+
 .menu {/* Navigation과 Archive 사이의 간격을 관리한다 */
     display: flex;
     align-items: center;
     gap: 2rem;
+    font: var(--font-nav);
+}
+
+.menu > a {
+    font: var(--font-nav-strong);
 }

@@ -1,21 +1,24 @@
 .timeline {
+    /* 경험 목록과 타임라인 선의 기준 영역 */
     position: relative;
     width: 100%;
     max-width: 56.25rem;
     margin-top: 3rem;
     padding: 2rem 0 2rem 7rem;
+
     display: flex;
     flex-direction: column;
     gap: 4rem;
 }
 
-/* 타임라인 왼쪽의 세로선 */
 .timeline::before {
+    /* 경험 항목을 시간 순서대로 연결하는 세로선 */
     content: '';
     position: absolute;
     top: 0;
     bottom: 0;
     left: 1rem;
+
     width: 0.25rem;
     background: var(--gray-900);
 }
@@ -24,16 +27,23 @@
     position: relative;
 }
 
-/* 각 경력 항목의 원형 표시 */
 .item::before {
+    /* 각 경험이 발생한 지점을 타임라인 위에 표시 */
     content: '';
     position: absolute;
     top: 0.25rem;
     left: -7rem;
+
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
     background: var(--gray-900);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .heading {
@@ -42,8 +52,24 @@
     gap: 0.5rem;
 }
 
-.content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.date {
+    font: var(--font-body2);
+    font-weight: 700;
+}
+
+.projectName {
+    /* 기존 글자 모양은 유지하고 프로젝트 이름의 배경만 강조 */
+    width: fit-content;
+    padding: 0.125rem 0.25rem;
+    background: var(--yellow-200);
+}
+
+.content p {
+    color: var(--gray-500);
+    font: var(--font-body3);
+}
+
+.content > a {
+    width: fit-content;
+    font: var(--font-body2);
 }

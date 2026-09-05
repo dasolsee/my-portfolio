@@ -1,24 +1,63 @@
 .content {
-    display: flex; /*글과 프로필 가로로배치*/
-    align-items: center;
-    justify-content: space-between;
-    gap: 4rem;
+    /* 소개 글과 고정 크기의 프로필 영역을 좌우 2열로 배치 */
     margin-top: 3rem;
+    display: grid;
+    grid-template-columns: 1fr 20rem;
+    align-items: center;
+    gap: 6rem;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.text h2 {
+    font: var(--font-h1);
+}
+
+.text p {
+    font: var(--font-body2);
+}
+
+/* 핵심 소개 문장이 일반 설명보다 먼저 보이도록 강조 */
+.text .message {
+    font: var(--font-body1);
+}
+
+.info {
+    /* 개인 정보를 일정한 기준으로 정렬하기 위해 2열 그리드 사용 */
+    margin-top: 0.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-500);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 3rem;
+}
+
+.info > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.info strong {
+    font: var(--font-small);
+    font-weight: 700;
+}
+
+.info a,
+.info span {
+    font: var(--font-small);
 }
 
 .profile {
+    /* 실제 프로필 이미지를 넣기 전에도 레이아웃 크기를 유지 */
     width: 20rem;
     height: 25rem;
-    flex-shrink: 0; /*왼쪽 글이 길어져도 이미지 영역이 찌그러지지 않게*/
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--gray-100);
-}
-
-.text { /*왼쪽 글 세로 간격*/
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
 }
