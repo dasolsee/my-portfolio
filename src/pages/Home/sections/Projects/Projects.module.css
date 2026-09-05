@@ -1,34 +1,67 @@
-/* 프로젝트 카드 2열 배치 */
+.intro {
+    margin-top: 2rem;
+}
+
+.intro h3 {
+    font: var(--font-h1);
+}
+
+.intro p {
+    margin-top: 0.5rem;
+    color: var(--gray-500);
+    font: var(--font-small);
+}
+
 .grid {
+    /* 넓은 화면에서 프로젝트를 비교할 수 있도록 2열로 배치 */
     margin-top: 3rem;
     display: grid;
     grid-template-columns: repeat(2, minmax(28rem, 1fr));
     gap: 1.5rem;
 }
 
-/* 프로젝트 카드 기본 구조 */
 .card {
+    height: 100%;
     padding: 2rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    border: 1px solid var(--gray-300);
     border-radius: var(--radius-lg);
-    background: var(--gray-100);
+    background: var(--gray-0);
 }
 
 .cardHeader {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.cardHeader h3 {
+    margin-top: 0.25rem;
+    font: var(--font-h2);
+}
+
+.period {
+    color: var(--gray-500);
+    font: var(--font-small);
 }
 
 .badge {
-    padding: 0.25rem 0.5rem;
+    flex-shrink: 0;
+    padding: 0.25rem 0.75rem;
     border-radius: var(--radius-pill);
     background: var(--yellow-200);
+    font: var(--font-small);
+    font-weight: 700;
 }
 
-/* 기간, 역할, 기술 스택 정렬 */
+.summary {
+    color: var(--gray-700);
+    font: var(--font-body2);
+}
+
 .info {
     display: flex;
     flex-direction: column;
@@ -41,19 +74,98 @@
     gap: 1rem;
 }
 
+.info dt {
+    color: var(--gray-500);
+    font: var(--font-small);
+}
+
+.info dd {
+    font: var(--font-body2);
+}
+
 .features {
     padding-top: 1.5rem;
     border-top: 1px solid var(--gray-300);
 }
 
+.features h4,
+.technologies h4 {
+    font: var(--font-body2);
+    font-weight: 700;
+}
+
 .features ul {
-    margin-top: 0.5rem;
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.features li {
+    position: relative;
+    padding-left: 1rem;
+    color: var(--gray-700);
+    font: var(--font-body3);
+}
+
+.features li::before {
+    content: '';
+    position: absolute;
+    top: 0.7rem;
+    left: 0;
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 50%;
+    background: var(--blue-700);
+}
+
+.technologies {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-300);
+}
+
+.technologies ul {
+    /* 기술의 개수와 길이에 따라 다음 줄로 자연스럽게 이동 */
+    margin-top: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.technologies li {
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius-pill);
+    font: var(--font-small);
+    font-weight: 700;
+}
+
+/* 기술을 빠르게 구분할 수 있도록 기술별 색상을 적용 */
+.java {
+    background: #fde8e8;
+    color: #b52f2f;
+}
+
+.spring {
+    background: #e7f5df;
+    color: #4c7a2d;
+}
+
+.mysql {
+    background: #e1f1f7;
+    color: #1f6c8c;
+}
+
+.jpa {
+    background: #e8e9ed;
+    color: #51535e;
 }
 
 .links {
+    /* 카드 내용의 길이가 달라도 링크를 카드 아래쪽에 배치 */
+    margin-top: auto;
     padding-top: 1.5rem;
     display: flex;
-    gap: 0.5rem;
+    gap: 0.75rem;
     border-top: 1px solid var(--gray-300);
 }
 
@@ -61,4 +173,7 @@
     padding: 0.5rem 0.75rem;
     border-radius: var(--radius-sm);
     background: var(--blue-100);
+    color: var(--blue-700);
+    font: var(--font-small);
+    font-weight: 700;
 }
