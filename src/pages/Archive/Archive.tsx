@@ -6,6 +6,8 @@ import Header from '../../components/common/Header/Header'
 import { archiveRecords } from './ArchiveRecords'
 import styles from './Archive.module.css'
 import Footer from '../../components/common/Footer/Footer'
+import ContactButton from '../../components/common/ContactButton/ContactButton'
+import TopButton from '../../components/common/TopButton/TopButton'
 
 // 필터에는 아래 세 가지 문자열만 사용할 수 있다.
 type Filter = '전체' | '해결' | '미해결'
@@ -245,7 +247,10 @@ function Archive() {
                     </div>
                 )}
             </main>
+
             <Footer/>
+            <ContactButton />
+            <TopButton/>
         </>
     )
 }

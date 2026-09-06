@@ -1,0 +1,38 @@
+.button {
+    /* 화면을 스크롤해도 오른쪽 아래 위치를 유지한다. */
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+    z-index: 90;
+
+    width: 5.5rem;
+    height: 5.5rem;
+    border-radius: 50%;
+
+    transition: transform 0.2s ease;
+}
+
+.button img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.button:hover {
+    transform: translateY(-0.25rem);
+}
+
+.button:focus-visible {
+    outline: 2px solid var(--blue-700);
+    outline-offset: 3px;
+}
+
+/* 작은 화면에서는 버튼 크기와 화면 가장자리 간격을 줄인다. */
+@media (max-width: 40rem) {
+    .button {
+        right: 1rem;
+        bottom: 1rem;
+        width: 4.5rem;
+        height: 4.5rem;
+    }
+}

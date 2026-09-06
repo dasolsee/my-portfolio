@@ -5,6 +5,8 @@ import Header from '../../components/common/Header/Header'
 import Footer from '../../components/common/Footer/Footer'
 import { archiveRecords } from './ArchiveRecords'
 import styles from './ArchiveDetail.module.css'
+import ContactButton from '../../components/common/ContactButton/ContactButton'
+import TopButton from '../../components/common/TopButton/TopButton'
 
 type Reply = {
     id: string
@@ -86,8 +88,10 @@ function ArchiveDetail() {
                         </Link>
                     </div>
                 </main>
-
+                {/* 기록을 찾지 못한 화면에도 공통 버튼을 표시한다. */}
                 <Footer />
+                <ContactButton />
+                <TopButton />
             </>
         )
     }
@@ -243,8 +247,10 @@ function ArchiveDetail() {
                 </div>
             </main>
 
-            {/* Archive 상세 내용이 끝난 뒤 공통 Footer를 표시한다. */}
+            {/* Archive 상세 내용이 끝난 뒤 공통 Footer와 버튼을 표시한다. */}
             <Footer />
+            <ContactButton />
+            <TopButton/>
         </>
     )
 }
