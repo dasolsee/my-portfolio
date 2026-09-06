@@ -1,3 +1,9 @@
+.projects {
+    /* 내용이 긴 프로젝트 섹션은 위아래 여백을 줄여 카드가 덜 잘리도록 한다. */
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
 .intro {
     margin-top: 2rem;
 }

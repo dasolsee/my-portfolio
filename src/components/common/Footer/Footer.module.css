@@ -1,0 +1,45 @@
+.footer {
+    border-top: 1px solid var(--gray-300);
+    background: var(--gray-0);
+}
+
+.inner {
+    min-height: 7rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.inner p {
+    color: var(--gray-500);
+    font: var(--font-small);
+}
+
+.links {
+    /* Footer 링크를 가로로 나란히 배치한다. */
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.links a {
+    color: var(--gray-700);
+    font: var(--font-small);
+    font-weight: 700;
+}
+
+.links a:hover {
+    color: var(--blue-700);
+    text-decoration: underline;
+}
+
+/* 화면이 좁아지면 저작권 문구와 링크를 세로로 배치한다. */
+@media (max-width: 40rem) {
+    .inner {
+        padding: 2rem 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}

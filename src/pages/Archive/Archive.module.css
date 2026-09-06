@@ -192,6 +192,36 @@
     font: var(--font-small);
 }
 
+.passwordLabel {
+    margin-top: 1.5rem;
+    display: block;
+    font: var(--font-small);
+    font-weight: 700;
+}
+
+.passwordInput {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-pill);
+    background: var(--gray-0);
+    color: var(--gray-900);
+    font: var(--font-small);
+}
+
+.passwordInput:focus {
+    border-color: var(--blue-700);
+    outline: 2px solid var(--blue-100);
+}
+
+.passwordError {
+    margin-top: 0.5rem;
+    display: block;
+    color: #b52f2f;
+    font: var(--font-small);
+}
+
 .actions {
     margin-top: 1.5rem;
     display: flex;

@@ -71,14 +71,21 @@ ul, ol {
   list-style: none;
 }
 
-section {
+main > section {
   /* 스크롤 이동 확인 가능하도록 섹션 기본 높이 설정
     --header-height는 Header 높이, 한 섹션이 한 화면씩 보이도록 계산 */
   min-height: calc(100vh - var(--header-height));
-  padding: 6rem 0; /* 96px */
+  padding: 4rem 0; /* 64px */
 
-  /* Header가 sticky이므로, 헤더 + 여유공간(0.5rem = 8px)만큼 스크롤 도착 위치를 조금 아래로 조정 */
-  scroll-margin-top: 5rem; /* 80px */
+  /* 메뉴 이동 시 섹션 제목이 sticky Header에 가려지지 않도록 Header 높이만큼 띄운다. */
+  scroll-margin-top: var(--header-height);
+}
+
+main > section > .container > h1,
+main > section > .container > h2 {
+  /* 태그가 h1 또는 h2여도 홈의 섹션 제목은 같은 크기로 표시한다. */
+  font: var(--font-h1);
+  text-transform: uppercase;
 }
 
 .container {

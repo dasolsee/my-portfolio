@@ -1,9 +1,11 @@
 // 선택한 필터와 화면에 표시할 기록 상태를 관리한다.
 import { useState } from 'react'
+import type { FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../../components/common/Header/Header'
 import { archiveRecords } from './ArchiveRecords'
 import styles from './Archive.module.css'
+import Footer from '../../components/common/Footer/Footer'
 
 // 필터에는 아래 세 가지 문자열만 사용할 수 있다.
 type Filter = '전체' | '해결' | '미해결'
@@ -16,6 +18,10 @@ function Archive() {
 
     // 상태를 변경할 기록의 번호를 기억한다. null이면 확인 창을 닫는다.
     const [selectedId, setSelectedId] = useState<number | null>(null)
+
+    // 해결 여부는 관리자만 변경할 수 있도록 입력한 비밀번호와 오류 문구를 관리한다.
+    const [password, setPassword] = useState('')
+    const [passwordError, setPasswordError] = useState('')
 
     const filters: Filter[] = ['전체', '해결', '미해결']
 
@@ -31,7 +37,27 @@ function Archive() {
     // 선택한 번호와 일치하는 기록 하나를 찾아 확인 창에 사용한다.
     const selectedRecord = records.find((record) => record.id === selectedId)
 
-    function changeStatus() {
+    function openStatusDialog(id: number) {
+        setSelectedId(id)
+        setPassword('')
+        setPasswordError('')
+    }
+
+    function closeStatusDialog() {
+        setSelectedId(null)
+        setPassword('')
+        setPasswordError('')
+    }
+
+    function changeStatus(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+
+        // 현재는 화면 동작을 확인하는 MVP이므로 Vite 환경 변수의 관리자 비밀번호와 비교한다.
+        if (password !== import.meta.env.VITE_ARCHIVE_ADMIN_PASSWORD) {
+            setPasswordError('비밀번호가 일치하지 않습니다.')
+            return
+        }
+
         // 선택한 기록만 새 객체로 바꾸고 나머지 기록은 그대로 유지한다.
         // !record.resolved는 true와 false를 서로 반대로 바꾼다.
         setRecords((currentRecords) =>
@@ -42,7 +68,7 @@ function Archive() {
             )
         )
 
-        setSelectedId(null)
+        closeStatusDialog()
     }
 
     return (
@@ -102,7 +128,7 @@ function Archive() {
                                         aria-label={`${record.title}: ${
                                             record.resolved ? '미해결' : '해결'
                                         }로 변경`}
-                                        onClick={() => setSelectedId(record.id)}
+                                        onClick={() => openStatusDialog(record.id)}
                                     >
                                         {/* 체크 모양은 장식이며 상태는 아래 글자로 안내한다. */}
                                         <span
@@ -155,7 +181,7 @@ function Archive() {
                 {/* 선택한 기록이 있을 때만 상태 변경 확인 창을 표시한다. */}
                 {selectedRecord && (
                     <div className={styles.overlay}>
-                        <div className={styles.confirm}>
+                        <form className={styles.confirm} onSubmit={changeStatus}>
                             <h2>
                                 {selectedRecord.resolved
                                     ? '미해결 처리하시겠습니까?'
@@ -164,28 +190,62 @@ function Archive() {
 
                             <p>언제든 다시 상태를 변경할 수 있습니다.</p>
 
+                            <label
+                                className={styles.passwordLabel}
+                                htmlFor="status-password"
+                            >
+                                관리자 비밀번호
+                            </label>
+
+                            <input
+                                id="status-password"
+                                className={styles.passwordInput}
+                                type="password"
+                                value={password}
+                                autoFocus
+                                autoComplete="current-password"
+                                placeholder="비밀번호를 입력해 주세요."
+                                aria-describedby={
+                                    passwordError ? 'password-error' : undefined
+                                }
+                                onChange={(event) => {
+                                    setPassword(event.target.value)
+                                    setPasswordError('')
+                                }}
+                            />
+
+                            {passwordError && (
+                                <span
+                                    id="password-error"
+                                    className={styles.passwordError}
+                                    role="alert"
+                                >
+                                    {passwordError}
+                                </span>
+                            )}
+
                             <div className={styles.actions}>
                                 {/* 취소하면 기록 상태는 유지하고 확인 창만 닫는다. */}
                                 <button
                                     type="button"
                                     className={styles.cancelButton}
-                                    onClick={() => setSelectedId(null)}
+                                    onClick={closeStatusDialog}
                                 >
                                     취소
                                 </button>
 
                                 <button
-                                    type="button"
+                                    type="submit"
                                     className={styles.saveButton}
-                                    onClick={changeStatus}
                                 >
                                     저장
                                 </button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 )}
             </main>
+            <Footer/>
         </>
     )
 }

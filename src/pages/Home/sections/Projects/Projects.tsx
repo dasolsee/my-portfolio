@@ -3,7 +3,11 @@ import styles from './Projects.module.css'
 
 function Projects() {
     return (
-        <section id="projects" aria-labelledby="projects-title">
+        <section
+            id="projects"
+            className={styles.projects}
+            aria-labelledby="projects-title"
+        >
             <div className="container">
                 <h2 id="projects-title">Projects</h2>
 

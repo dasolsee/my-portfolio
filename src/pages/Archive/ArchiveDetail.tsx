@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Header from '../../components/common/Header/Header'
+import Footer from '../../components/common/Footer/Footer'
 import { archiveRecords } from './ArchiveRecords'
 import styles from './ArchiveDetail.module.css'
 
@@ -85,6 +86,8 @@ function ArchiveDetail() {
                         </Link>
                     </div>
                 </main>
+
+                <Footer />
             </>
         )
     }
@@ -239,6 +242,9 @@ function ArchiveDetail() {
                     </section>
                 </div>
             </main>
+
+            {/* Archive 상세 내용이 끝난 뒤 공통 Footer를 표시한다. */}
+            <Footer />
         </>
     )
 }
