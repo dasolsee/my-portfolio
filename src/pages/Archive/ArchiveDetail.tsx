@@ -1,12 +1,23 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Header from '../../components/common/Header/Header'
 import Footer from '../../components/common/Footer/Footer'
-import { archiveRecords } from './ArchiveRecords'
+import { supabase } from '../../lib/supabaseClient'
 import styles from './ArchiveDetail.module.css'
 import ContactButton from '../../components/common/ContactButton/ContactButton'
 import TopButton from '../../components/common/TopButton/TopButton'
+
+type ArchiveRecord = {
+    id: number
+    created_at: string
+    title: string
+    content: string
+    code_language: string | null
+    code: string | null
+    tags: string | null
+    resolved: boolean
+}
 
 type Reply = {
     id: string
@@ -15,34 +26,33 @@ type Reply = {
     createdAt: string
 }
 
-// 상세 화면의 코드 블록과 태그에 사용할 예시다.
-// 실제 저장 기능을 연결할 때 기록 데이터에 함께 포함할 수 있다.
-const examples: Record<number, { code: string; tags: string[] }> = {
-    1: {
-        code: 'npm ci\nnpm run lint\nnpm run build',
-        tags: ['Vite', 'npm', '오류 해결'],
-    },
-    2: {
-        code: '<path fill="#4F76C4" ... />',
-        tags: ['SVG', 'CSS', '아이콘'],
-    },
-    3: {
-        code: '<h3 className={styles.projectName}>\n    프로젝트 이름\n</h3>',
-        tags: ['React', 'CSS Modules'],
-    },
-    4: {
-        code: 'node -v\nnpm -v\nnpm run dev',
-        tags: ['Node.js', '개발 환경'],
-    },
-}
-
 function ArchiveDetail() {
     // 주소에서 가져온 id는 문자열이므로 숫자로 바꿔 기록 번호와 비교한다.
     const { id } = useParams()
-    const record = archiveRecords.find((item) => item.id === Number(id))
 
+    const [record, setRecord] = useState<ArchiveRecord | null>(null)
+    const [isLoading, setIsLoading] = useState(true)
     const [replyText, setReplyText] = useState('')
     const [replies, setReplies] = useState<Reply[]>([])
+
+    useEffect(() => {
+        async function getRecord() {
+            const { data, error } = await supabase
+                .from('archive_records')
+                .select('*')
+                .eq('id', Number(id))
+                .maybeSingle()
+
+            if (error) {
+                console.error('상세 기록 조회 실패:', error)
+            }
+
+            setRecord(data)
+            setIsLoading(false)
+        }
+
+        getRecord()
+    }, [id])
 
     // 다른 기록의 답변이 섞이지 않도록 현재 기록 번호로 구분한다.
     const visibleReplies = replies.filter(
@@ -71,6 +81,24 @@ function ArchiveDetail() {
         setReplyText('')
     }
 
+    if (isLoading) {
+        return (
+            <>
+                <Header />
+
+                <main className={styles.detail}>
+                    <div className="container">
+                        <p>기록을 불러오는 중입니다.</p>
+                    </div>
+                </main>
+
+                <Footer />
+                <ContactButton />
+                <TopButton />
+            </>
+        )
+    }
+
     // 존재하지 않는 번호로 접속하면 안내와 목록으로 돌아가는 링크를 표시한다.
     if (!record) {
         return (
@@ -95,8 +123,6 @@ function ArchiveDetail() {
             </>
         )
     }
-
-    const example = examples[record.id]
 
     return (
         <>
@@ -133,59 +159,44 @@ function ArchiveDetail() {
 
                         <div className={styles.body}>
                             <section className={styles.block}>
-                                <h2>발생한 문제</h2>
-                                <p>{record.problem}</p>
-                            </section>
-
-                            <section className={styles.block}>
-                                <h2>확인과 시도</h2>
-
-                                {/* 확인한 순서가 중요하므로 번호가 있는 목록을 사용한다. */}
-                                <ol className={styles.attempts}>
-                                    {record.attempts.map((attempt, index) => (
-                                        <li key={index}>{attempt}</li>
-                                    ))}
-                                </ol>
-                            </section>
-
-                            <section className={styles.block}>
-                                <h2>
-                                    {record.resolved
-                                        ? '해결 방법'
-                                        : '현재 진행 상황'}
-                                </h2>
-
-                                <p>{record.solution}</p>
+                                <h2>본문</h2>
+                                <p>{record.content}</p>
                             </section>
 
                             {/* 코드를 문자열로 표시하므로 HTML 태그가 있어도 실행되지 않는다. */}
-                            {example && (
+                            {record.code && (
                                 <div className={styles.codeArea}>
                                     <p className={styles.codeLabel}>
-                                        관련 코드 · 예시
+                                        {record.code_language
+                                            ? `관련 코드 · ${record.code_language}`
+                                            : '관련 코드'}
                                     </p>
 
                                     <pre className={styles.codeBlock}>
-                                        <code>{example.code}</code>
+                                        <code>{record.code}</code>
                                     </pre>
                                 </div>
                             )}
-
-                            <section className={styles.block}>
-                                <h2>배운 점</h2>
-                                <p>{record.learned}</p>
-                            </section>
                         </div>
 
                         <footer className={styles.cardFooter}>
-                            <ul className={styles.tags} aria-label="기술 태그">
-                                {example?.tags.map((tag) => (
-                                    <li key={tag}>#{tag}</li>
-                                ))}
-                            </ul>
+                            {record.tags && (
+                                <ul className={styles.tags} aria-label="기술 태그">
+                                    {record.tags
+                                        .split(',')
+                                        .map((tag) => tag.trim())
+                                        .filter((tag) => tag.length > 0)
+                                        .map((tag) => (
+                                            <li key={tag}>#{tag}</li>
+                                        ))}
+                                </ul>
+                            )}
 
-                            <time dateTime={record.date}>
-                                작성일 {record.date}
+                            <time dateTime={record.created_at}>
+                                작성일{' '}
+                                {new Date(
+                                    record.created_at
+                                ).toLocaleDateString('ko-KR')}
                             </time>
                         </footer>
                     </article>
@@ -247,7 +258,7 @@ function ArchiveDetail() {
                 </div>
             </main>
 
-            {/* Archive 상세 내용이 끝난 뒤 공통 Footer와 버튼을 표시한다. */}
+            {/* Archive 상세 내용이 끝난 뒤 공통 Footer와 버튼 들을 표시한다. */}
             <Footer />
             <ContactButton />
             <TopButton/>

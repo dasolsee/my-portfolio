@@ -1,9 +1,9 @@
 // 선택한 필터와 화면에 표시할 기록 상태를 관리한다.
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../../components/common/Header/Header'
-import { archiveRecords } from './ArchiveRecords'
+import { supabase } from '../../lib/supabaseClient'
 import styles from './Archive.module.css'
 import Footer from '../../components/common/Footer/Footer'
 import ContactButton from '../../components/common/ContactButton/ContactButton'
@@ -12,11 +12,41 @@ import TopButton from '../../components/common/TopButton/TopButton'
 // 필터에는 아래 세 가지 문자열만 사용할 수 있다.
 type Filter = '전체' | '해결' | '미해결'
 
+// Supabase의 archive_records 테이블에서 가져올 기록 형태를 정한다.
+type ArchiveRecord = {
+    id: number
+    created_at: string
+    title: string
+    content: string
+    code_language: string | null
+    code: string | null
+    tags: string | null
+    resolved: boolean
+}
+
 function Archive() {
     const [filter, setFilter] = useState<Filter>('전체')
 
-    // 해결 여부를 변경하면 화면도 다시 표시되도록 기록 배열을 state로 관리한다.
-    const [records, setRecords] = useState(archiveRecords)
+    const [records, setRecords] = useState<ArchiveRecord[]>([])
+
+// Archive 페이지가 처음 나타날 때 Supabase에서 기록을 가져온다.
+    useEffect(() => {
+        async function getRecords() {
+            const { data, error } = await supabase
+                .from('archive_records')
+                .select('*')
+                .order('created_at', { ascending: false })
+
+            if (error) {
+                console.error('기록 조회 실패:', error)
+                return
+            }
+
+            setRecords(data)
+        }
+
+        getRecords()
+    }, [])
 
     // 상태를 변경할 기록의 번호를 기억한다. null이면 확인 창을 닫는다.
     const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -51,25 +81,52 @@ function Archive() {
         setPasswordError('')
     }
 
-    function changeStatus(event: FormEvent<HTMLFormElement>) {
+    async function changeStatus(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
 
-        // 현재는 화면 동작을 확인하는 MVP이므로 Vite 환경 변수의 관리자 비밀번호와 비교한다.
-        if (password !== import.meta.env.VITE_ARCHIVE_ADMIN_PASSWORD) {
+        if (!selectedRecord) {
+            return
+        }
+
+        // 입력한 비밀번호로 Supabase 관리자 로그인을 시도한다.
+        const { error: loginError } =
+            await supabase.auth.signInWithPassword({
+                email: import.meta.env.VITE_ARCHIVE_ADMIN_EMAIL,
+                password: password,
+            })
+
+        if (loginError) {
             setPasswordError('비밀번호가 일치하지 않습니다.')
             return
         }
 
-        // 선택한 기록만 새 객체로 바꾸고 나머지 기록은 그대로 유지한다.
-        // !record.resolved는 true와 false를 서로 반대로 바꾼다.
+        const nextResolved = !selectedRecord.resolved
+
+        // 선택한 기록의 해결 여부를 Supabase에서 변경한다.
+        const { error: updateError } = await supabase
+            .from('archive_records')
+            .update({
+                resolved: nextResolved,
+            })
+            .eq('id', selectedRecord.id)
+
+        if (updateError) {
+            await supabase.auth.signOut()
+            console.error('상태 변경 실패:', updateError)
+            setPasswordError('상태를 변경하지 못했습니다.')
+            return
+        }
+
+        // Supabase 변경에 성공한 경우 화면의 상태도 변경한다.
         setRecords((currentRecords) =>
             currentRecords.map((record) =>
-                record.id === selectedId
-                    ? { ...record, resolved: !record.resolved }
+                record.id === selectedRecord.id
+                    ? { ...record, resolved: nextResolved }
                     : record
             )
         )
 
+        await supabase.auth.signOut()
         closeStatusDialog()
     }
 
@@ -151,7 +208,7 @@ function Archive() {
                                 </div>
 
                                 <p className={styles.preview}>
-                                    {record.problem}
+                                    {record.content}
                                 </p>
 
                                 <Link
@@ -164,8 +221,8 @@ function Archive() {
                                 <div className={styles.cardFooter}>
                                     <span>문제 해결 기록</span>
 
-                                    <time dateTime={record.date}>
-                                        작성일 {record.date}
+                                    <time dateTime={record.created_at}>
+                                        작성일 {new Date(record.created_at).toLocaleDateString('ko-KR')}
                                     </time>
                                 </div>
                             </article>

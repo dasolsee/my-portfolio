@@ -1,0 +1,123 @@
+.write {
+    /* 헤더를 제외한 화면 높이를 확보하고 위아래 여백을 준다. */
+    min-height: calc(100vh - var(--header-height));
+    padding: 2rem 0 6rem;
+}
+
+.heading {
+    /* 제목과 목록 이동 버튼을 한 줄의 양쪽 끝에 배치한다. */
+    width: 100%;
+    max-width: 54rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.heading h1 {
+    font: var(--font-h1);
+}
+
+.heading a {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-pill);
+    color: var(--gray-700);
+    font: var(--font-small);
+}
+
+.form {
+    /* 입력 항목을 위에서 아래로 순서대로 배치한다. */
+    width: 100%;
+    max-width: 54rem;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.form label {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font: var(--font-small);
+    font-weight: 700;
+}
+
+.form label:first-of-type {
+    margin-top: 0;
+}
+
+.form input,
+.form select,
+.form textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    background: var(--gray-0);
+    color: var(--gray-900);
+    font: var(--font-body3);
+}
+
+.form input,
+.form select {
+    min-height: 2.75rem;
+}
+
+.form textarea {
+    /* 필요하면 사용자가 입력창의 세로 크기를 조절할 수 있다. */
+    resize: vertical;
+}
+
+.form input::placeholder,
+.form textarea::placeholder {
+    color: var(--gray-500);
+}
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus {
+    border-color: var(--blue-700);
+    outline: 2px solid var(--blue-100);
+}
+
+.actions {
+    /* 취소와 저장 버튼을 폼 오른쪽에 배치한다. */
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.cancelButton,
+.saveButton {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-pill);
+    font: var(--font-small);
+}
+
+.cancelButton {
+    background: var(--gray-100);
+    color: var(--gray-700);
+}
+
+.saveButton {
+    background: var(--blue-700);
+    color: var(--gray-0);
+}
+
+.write a:focus-visible,
+.write button:focus-visible {
+    outline: 2px solid var(--blue-700);
+    outline-offset: 3px;
+}
+
+/* 화면이 좁아지면 작성 영역의 위아래 여백을 줄인다. */
+@media (max-width: 48rem) {
+    .write {
+        padding: 1.5rem 0 4rem;
+    }
+
+    .heading {
+        align-items: flex-start;
+    }
+}
