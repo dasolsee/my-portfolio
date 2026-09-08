@@ -1,3 +1,4 @@
+import { experiences } from '../../../../data/experience'
 import styles from './Experience.module.css'
 
 function Experience() {
@@ -7,19 +8,35 @@ function Experience() {
                 <h2 id="experience-title">EXPERIENCE</h2>
 
                 <ol className={styles.timeline}>
-                    <li className={styles.item}>
-                        <div className={styles.content}>
-                            {/* 연도와 활동명을 한 줄로 묶는다 */}
-                            <div className={styles.heading}>
-                                <time className={styles.date}>2026.09 - 2026.09</time>
-                                <h3 className={styles.projectName}>프로젝트 이름?이나 활동명</h3>
+                    {experiences.map((experience) => (
+                        <li
+                            className={styles.item}
+                            key={`${experience.date}-${experience.title}`}
+                        >
+                            <div className={styles.content}>
+                                {/* 연도와 활동명을 한 줄로 묶는다 */}
+                                <div className={styles.heading}>
+                                    <time className={styles.date}>
+                                        {experience.date}
+                                    </time>
+
+                                    <h3 className={styles.projectName}>
+                                        {experience.title}
+                                    </h3>
+                                </div>
+
+                                {experience.project && (
+                                    <p>{experience.project}</p>
+                                )}
+
+                                {experience.award && (
+                                    <strong className={styles.award}>
+                                        {experience.award}
+                                    </strong>
+                                )}
                             </div>
-
-                            <p>담당했던 역할 경험 등등..</p>
-                            <a href="#projects">관련 프로젝트 보기?</a>
-
-                        </div>
-                    </li>
+                        </li>
+                    ))}
                 </ol>
             </div>
         </section>

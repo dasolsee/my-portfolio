@@ -71,6 +71,11 @@ ul, ol {
   list-style: none;
 }
 
+img {
+  max-width: 100%;
+  display: block;
+}
+
 main > section {
   /* 스크롤 이동 확인 가능하도록 섹션 기본 높이 설정
     --header-height는 Header 높이, 한 섹션이 한 화면씩 보이도록 계산 */
@@ -97,3 +102,18 @@ main > section > .container > h2 {
   margin: 0 auto;
 }
 
+@media (max-width: 48rem) {
+  :root {
+    /* 두 줄로 바뀐 모바일 Header 높이를 섹션 이동 위치에 반영한다. */
+    --header-height: 6rem;
+  }
+
+  main > section {
+    min-height: auto;
+    padding: 4rem 0;
+  }
+
+  .container {
+    width: calc(100% - 2rem);
+  }
+}

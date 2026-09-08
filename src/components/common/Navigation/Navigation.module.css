@@ -3,3 +3,9 @@
     align-items: center;
     gap: 2rem;
 }
+
+@media (max-width: 48rem) {
+    .list {
+        gap: 1.25rem;
+    }
+}

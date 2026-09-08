@@ -1,4 +1,5 @@
 // CSS Module에 작성한 클래스 이름을 styles로 불러온다.
+import { skillGroups } from '../../../../data/skills'
 import styles from './Skills.module.css'
 
 function Skills() {
@@ -22,55 +23,27 @@ function Skills() {
 
                 {/* 기술의 사용 목적에 따라 네 가지 카테고리로 구분 */}
                 <div className={styles.groups}>
-                    <article className={styles.group}>
-                        <h3>Language</h3>
+                    {skillGroups.map((group) => (
+                        <article className={styles.group} key={group.title}>
+                            <div className={styles.groupTitle}>
+                                <h3>{group.title}</h3>
+                            </div>
 
-                        <p>
-                            서버 로직 구현에 사용하는 프로그래밍 언어입니다.
-                        </p>
-
-                        {/* 같은 카테고리에 포함된 기술을 목록으로 구성 */}
-                        <ul>
-                            <li className={styles.java}>Java</li>
-                        </ul>
-                    </article>
-
-                    <article className={styles.group}>
-                        <h3>Backend</h3>
-
-                        <p>
-                            웹 애플리케이션의 서버를 구현하는 기술입니다.
-                        </p>
-
-                        <ul>
-                            <li className={styles.spring}>Spring Boot</li>
-                        </ul>
-                    </article>
-
-                    <article className={styles.group}>
-                        <h3>Database</h3>
-
-                        <p>
-                            서비스 데이터를 저장하고 관리하는 기술입니다.
-                        </p>
-
-                        <ul>
-                            <li className={styles.mysql}>MySQL</li>
-                        </ul>
-                    </article>
-
-                    <article className={styles.group}>
-                        <h3>Tools</h3>
-
-                        <p>
-                            코드와 프로젝트 변경 이력을 관리하는 도구입니다.
-                        </p>
-
-                        <ul>
-                            <li className={styles.git}>Git</li>
-                            <li className={styles.github}>GitHub</li>
-                        </ul>
-                    </article>
+                            {/* 같은 카테고리에 포함된 기술을 목록으로 구성 */}
+                            <ul>
+                                {group.skills.map((skill) => (
+                                    <li key={skill.name}>
+                                        <img
+                                            src={skill.icon}
+                                            alt=""
+                                            aria-hidden="true"
+                                        />
+                                        <span>{skill.name}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </article>
+                    ))}
                 </div>
             </div>
         </section>

@@ -74,3 +74,9 @@
     color: var(--blue-700);
     font: var(--font-small);
 }
+
+@media (max-width: 48rem) {
+    .contactList {
+        grid-template-columns: 1fr;
+    }
+}

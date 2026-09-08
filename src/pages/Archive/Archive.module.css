@@ -242,3 +242,23 @@
     outline: 2px solid var(--blue-700);
     outline-offset: 3px;
 }
+
+@media (max-width: 40rem) {
+    .archive {
+        padding: 1.5rem 0 4rem;
+    }
+
+    .headingRow,
+    .toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .card {
+        padding: 1.25rem;
+    }
+
+    .cardHeader {
+        gap: 1rem;
+    }
+}

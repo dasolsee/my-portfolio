@@ -50,16 +50,15 @@
 .info a,
 .info span {
     font: var(--font-small);
+    overflow-wrap: anywhere;
 }
 
 .profile {
     /* 실제 프로필 이미지를 넣기 전에도 레이아웃 크기를 유지 */
     width: 20rem;
     height: 25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--gray-100);
+    object-fit: cover;
+    object-position: center top;
 }
 
 .archiveCard {
@@ -105,6 +104,23 @@
 }
 
 @media (max-width: 40rem) {
+    .content {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .profile {
+        width: min(20rem, 100%);
+        height: auto;
+        aspect-ratio: 4 / 5;
+        justify-self: center;
+    }
+
+    .info {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
     .archiveCard {
         padding: 1.25rem;
     }

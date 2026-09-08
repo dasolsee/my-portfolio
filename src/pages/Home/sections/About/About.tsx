@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import profileImage from '../../../../assets/profile.jpeg'
 import styles from './About.module.css'
 
 function About() {
@@ -69,13 +70,11 @@ function About() {
                         </div>
                     </div>
 
-                    <div
+                    <img
                         className={styles.profile}
-                        role="img"
-                        aria-label="신다솔 프로필 이미지"
-                    >
-                        프로필 이미지
-                    </div>
+                        src={profileImage}
+                        alt="신다솔 증명사진"
+                    />
                 </div>
 
                 {/* Archive 페이지로 이동하는 카드형 링크 */}
