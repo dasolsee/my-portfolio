@@ -36,6 +36,24 @@
     overflow-wrap: anywhere;
 }
 
+.titleArea {
+    min-width: 0;
+}
+
+.createdAt {
+    margin-top: 0.5rem;
+    display: block;
+    color: var(--gray-500);
+    font: var(--font-small);
+}
+
+.cardActions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
 .status {
     flex-shrink: 0;
     display: flex;
@@ -44,6 +62,31 @@
     gap: 0.375rem;
     color: var(--gray-700);
     font: var(--font-small);
+    padding: 0.375rem;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s ease;
+}
+
+.status:hover {
+    background: var(--blue-50);
+}
+
+.deleteButton,
+.replyDeleteButton {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #b52f2f;
+    border-radius: var(--radius-pill);
+    color: #b52f2f;
+    font: var(--font-small);
+}
+
+.deleteButton {
+    margin-left: 0;
+}
+
+.deleteButton:hover,
+.replyDeleteButton:hover {
+    background: #fff1f1;
 }
 
 .check {
@@ -111,10 +154,57 @@
     font: var(--font-small);
 }
 
+.codeWrapper {
+    position: relative;
+}
+
+.copyButton {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 1;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+
+    border: 1px solid var(--gray-500);
+    border-radius: var(--radius-sm);
+    background: #292929;
+    color: var(--gray-0);
+    font: var(--font-small);
+}
+
+.copyButton:hover {
+    background: #3a3a3a;
+}
+
+.copyIcon {
+    position: relative;
+    width: 0.875rem;
+    height: 0.875rem;
+    display: block;
+    border: 1px solid currentColor;
+    border-radius: 0.125rem;
+}
+
+.copyIcon::before {
+    content: '';
+    position: absolute;
+    top: -0.25rem;
+    left: -0.25rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-top: 1px solid currentColor;
+    border-left: 1px solid currentColor;
+    border-radius: 0.125rem 0 0;
+}
+
 .codeBlock {
     /* 긴 코드만 내부에서 가로 스크롤하고 카드 너비는 유지한다. */
     max-width: 100%;
-    padding: 1.5rem;
+    padding: 3.75rem 1.5rem 1.5rem;
     overflow-x: auto;
     border-radius: var(--radius-sm);
     background: var(--gray-900);
@@ -145,6 +235,25 @@
     gap: 0.5rem;
 }
 
+.recordActions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.editButton {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--blue-700);
+    border-radius: var(--radius-pill);
+    color: var(--blue-700);
+    font: var(--font-small);
+}
+
+.editButton:hover {
+    background: var(--blue-50);
+}
+
 .replies {
     /* 답변 영역도 전역 section 높이를 상속하지 않도록 설정한다. */
     min-height: auto;
@@ -157,43 +266,55 @@
 }
 
 .replyForm {
-    /* 답변은 남는 너비를 사용하고 비밀번호와 버튼은 오른쪽에 배치한다. */
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    border-top: 1px solid var(--gray-300);
+}
+
+.replyForm label {
+    font: var(--font-small);
+    font-weight: 700;
 }
 
 .replyInput,
-.passwordInput {
+.replyCodeInputs select,
+.replyCodeInputs textarea {
+    width: 100%;
     padding: 0.625rem 1rem;
     border: 1px solid var(--gray-300);
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius-sm);
     background: var(--gray-0);
     color: var(--gray-900);
     font: var(--font-small);
 }
 
 .replyInput {
-    flex: 1;
-    min-width: 0;
+    resize: vertical;
 }
 
-.passwordInput {
-    width: 8rem;
+.replyCodeInputs {
+    display: grid;
+    grid-template-columns: 10rem 1fr;
+    gap: 1rem;
 }
 
-.replyInput::placeholder,
-.passwordInput::placeholder {
-    color: var(--gray-500);
+.replyCodeInputs > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.passwordInput:disabled {
-    background: var(--gray-100);
-    cursor: not-allowed;
+.replyCodeInputs textarea {
+    resize: vertical;
+    font-family: Consolas, monospace;
 }
 
 .saveButton {
+    align-self: flex-end;
     flex-shrink: 0;
     padding: 0.625rem 1rem;
     border-radius: var(--radius-pill);
@@ -238,8 +359,43 @@
     font: var(--font-small);
 }
 
-.replyCard p {
-    margin-top: 0.75rem;
+.replyHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.replyActions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.replyEditButton {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--blue-700);
+    border-radius: var(--radius-pill);
+    color: var(--blue-700);
+    font: var(--font-small);
+}
+
+.replyEditButton:hover {
+    background: var(--blue-50);
+}
+
+.replyBody,
+.replyCodeArea {
+    margin-top: 1.25rem;
+}
+
+.replyBody h3 {
+    margin-bottom: 0.5rem;
+    font: var(--font-small);
+    font-weight: 700;
+}
+
+.replyBody p {
     font: var(--font-body3);
     overflow-wrap: anywhere;
     white-space: pre-wrap;
@@ -255,4 +411,187 @@
 .detail input:focus-visible {
     outline: 2px solid var(--blue-700);
     outline-offset: 3px;
+}
+
+/* 여기서부터는 상태 변경 시 화면 위에 관리자 확인 창을 표시한다. */
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+
+    background: rgb(20 22 27 / 40%);
+}
+
+.confirm {
+    width: min(28rem, 100%);
+    padding: 2rem;
+
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    background: var(--gray-0);
+}
+
+.confirm h2 {
+    font: var(--font-h3);
+}
+
+.confirm p {
+    margin-top: 0.5rem;
+    color: var(--gray-700);
+    font: var(--font-small);
+}
+
+.statusPasswordLabel {
+    margin-top: 1.5rem;
+    display: block;
+    font: var(--font-small);
+    font-weight: 700;
+}
+
+.statusPasswordInput {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.625rem 1rem;
+
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-pill);
+    background: var(--gray-0);
+    color: var(--gray-900);
+    font: var(--font-small);
+}
+
+.passwordError {
+    margin-top: 0.5rem;
+    display: block;
+    color: #b52f2f;
+    font: var(--font-small);
+}
+
+.statusActions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.cancelButton {
+    padding: 0.625rem 1rem;
+    border-radius: var(--radius-pill);
+    background: var(--gray-100);
+    color: var(--gray-700);
+    font: var(--font-small);
+}
+
+.cancelButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.deleteConfirmButton {
+    padding: 0.625rem 1rem;
+    border-radius: var(--radius-pill);
+    background: #b52f2f;
+    color: var(--gray-0);
+    font: var(--font-small);
+}
+
+.deleteConfirmButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.replyEditConfirm {
+    width: min(42rem, 100%);
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+}
+
+.editReplyFields {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.editReplyFields label {
+    font: var(--font-small);
+    font-weight: 700;
+}
+
+.editReplyFields input,
+.editReplyFields select,
+.editReplyFields textarea {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    background: var(--gray-0);
+    color: var(--gray-900);
+    font: var(--font-small);
+}
+
+.editReplyFields textarea {
+    resize: vertical;
+}
+
+.editReplyCodeInputs {
+    margin: 0.5rem 0;
+    display: grid;
+    grid-template-columns: 10rem 1fr;
+    gap: 1rem;
+}
+
+.editReplyCodeInputs > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.editReplyCodeInputs textarea {
+    font-family: Consolas, monospace;
+}
+
+@media (max-width: 40rem) {
+    .detail {
+        padding-bottom: 5rem;
+    }
+
+    .card {
+        padding: 1.25rem;
+    }
+
+    .cardHeader {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .cardActions {
+        justify-content: space-between;
+    }
+
+    .replyForm {
+        align-items: stretch;
+    }
+
+    .replyCodeInputs {
+        grid-template-columns: 1fr;
+    }
+
+    .editReplyCodeInputs {
+        grid-template-columns: 1fr;
+    }
+
+    .saveButton {
+        min-height: 2.75rem;
+    }
+
+    .confirm {
+        padding: 1.5rem;
+    }
 }

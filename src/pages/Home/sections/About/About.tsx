@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import styles from './About.module.css'
 
 function About() {
@@ -76,6 +77,16 @@ function About() {
                         프로필 이미지
                     </div>
                 </div>
+
+                {/* Archive 페이지로 이동하는 카드형 링크 */}
+                <Link className={styles.archiveCard} to="/archive">
+                    <div>
+                        <strong>ARCHIVE</strong>
+                        <p>개발 문제 해결 기록</p>
+                    </div>
+
+                    <span>보러가기 →</span>
+                </Link>
             </div>
         </section>
     )
