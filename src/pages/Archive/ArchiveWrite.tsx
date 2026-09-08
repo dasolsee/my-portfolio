@@ -1,15 +1,33 @@
 import type { FormEvent } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import Header from '../../components/common/Header/Header'
 import Footer from '../../components/common/Footer/Footer'
 import ContactButton from '../../components/common/ContactButton/ContactButton'
 import TopButton from '../../components/common/TopButton/TopButton'
-import { supabase } from '../../lib/supabaseClient'
+import {
+    AdminPasswordError,
+    archiveKeys,
+    createArchiveRecord,
+} from '../../api/archive'
+import type { RecordInput } from '../../api/archive'
 import styles from './ArchiveWrite.module.css'
 
 function ArchiveWrite() {
     // 저장이 끝나면 Archive 목록으로 이동할 때 사용한다.
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
+    const createMutation = useMutation({
+        mutationFn: ({
+            input,
+            password,
+        }: {
+            input: RecordInput
+            password: string
+        }) => createArchiveRecord(input, password),
+        onSuccess: () =>
+            queryClient.invalidateQueries({ queryKey: archiveKeys.records }),
+    })
 
     async function saveRecord(event: FormEvent<HTMLFormElement>) {
         // form 제출로 페이지가 새로고침되는 것을 막는다.
@@ -26,41 +44,28 @@ function ArchiveWrite() {
         const code = String(formData.get('code')).trim() || null
         const tags = String(formData.get('tags')).trim() || null
 
-        // 입력한 비밀번호로 Supabase 관리자 로그인을 시도한다.
-        const { error: loginError } =
-            await supabase.auth.signInWithPassword({
-                email: import.meta.env.VITE_ARCHIVE_ADMIN_EMAIL,
-                password: password,
+        try {
+            await createMutation.mutateAsync({
+                input: {
+                    title,
+                    content,
+                    code_language: codeLanguage,
+                    code,
+                    tags,
+                },
+                password,
             })
 
-        if (loginError) {
-            alert('관리자 비밀번호가 일치하지 않습니다.')
-            return
+            alert('기록이 저장되었습니다.')
+            navigate('/archive')
+        } catch (error) {
+            console.error('기록 저장 실패:', error)
+            alert(
+                error instanceof AdminPasswordError
+                    ? error.message
+                    : '기록을 저장하지 못했습니다.'
+            )
         }
-
-        // 로그인이 성공하면 입력한 기록을 Supabase에 저장한다.
-        const { error: saveError } = await supabase
-            .from('archive_records')
-            .insert({
-                title: title,
-                content: content,
-                code_language: codeLanguage,
-                code: code,
-                tags: tags,
-            })
-
-        if (saveError) {
-            await supabase.auth.signOut()
-            console.error('기록 저장 실패:', saveError)
-            alert('기록을 저장하지 못했습니다.')
-            return
-        }
-
-        // 저장이 끝나면 관리자 로그인을 해제한다.
-        await supabase.auth.signOut()
-
-        alert('기록이 저장되었습니다.')
-        navigate('/archive')
     }
 
     return (
@@ -160,8 +165,9 @@ function ArchiveWrite() {
                             <button
                                 className={styles.saveButton}
                                 type="submit"
+                                disabled={createMutation.isPending}
                             >
-                                저장
+                                {createMutation.isPending ? '저장 중...' : '저장'}
                             </button>
                         </div>
                     </form>

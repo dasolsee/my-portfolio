@@ -39,6 +39,35 @@
     font: var(--font-nav-strong);
 }
 
+/* 선택된 메뉴의 글자 뒤에 붓으로 칠한 듯한 배경을 표시한다. */
+.menu a {
+    position: relative;
+    isolation: isolate;
+    display: inline-block;
+    padding: 0.4rem 0.2rem;
+}
+
+.menu a::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 18% 0 12%;
+    background: var(--yellow-200);
+    clip-path: polygon(2% 13%, 20% 5%, 42% 10%, 68% 2%, 98% 8%, 95% 35%, 100% 62%, 96% 91%, 73% 97%, 50% 91%, 25% 100%, 0 88%, 4% 55%, 0 30%);
+    transform: rotate(-2deg);
+    opacity: 0;
+}
+
+.menu a[aria-current]::before {
+    opacity: 1;
+}
+
+.menu a:focus-visible {
+    outline: 2px solid var(--blue-700);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
 @media (max-width: 48rem) {
     .inner {
         min-height: var(--header-height);

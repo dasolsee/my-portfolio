@@ -1,76 +1,70 @@
+import type { Project } from '../../../../data/projects'
 import styles from './Projects.module.css'
 
-function ProjectCard() {
+type ProjectCardProps = {
+    project: Project
+}
+
+function ProjectCard({ project }: ProjectCardProps) {
     return (
         <article className={styles.card}>
             <header className={styles.cardHeader}>
                 <div>
-                    <span className={styles.period}>
-                        2022.10 - 2022.11
-                    </span>
-
-                    <h3>프로젝트명</h3>
+                    <span className={styles.period}>{project.period}</span>
+                    <h3>{project.title}</h3>
                 </div>
-
-                <span className={styles.badge}>수상</span>
+                {project.award && (
+                    <span className={styles.badge}>{project.award}</span>
+                )}
             </header>
 
-            <p className={styles.summary}>
-                프로젝트의 목적과 핵심 기능을 한 문장으로 소개합니다.
-            </p>
+            <p className={styles.summary}>{project.summary}</p>
 
-            {/* 프로젝트의 기본 정보를 항목과 내용의 관계로 표현 */}
             <dl className={styles.info}>
                 <div>
                     <dt>담당 역할</dt>
-                    <dd>백엔드 개발</dd>
+                    <dd>{project.role}</dd>
                 </div>
-
                 <div>
                     <dt>참여 인원</dt>
-                    <dd>백엔드 3명, 프론트엔드 2명</dd>
+                    <dd>{project.members}</dd>
                 </div>
             </dl>
 
             <div className={styles.features}>
-                <h4>주요 구현 내용</h4>
-
+                <h4>{project.featuresTitle}</h4>
                 <ul>
-                    <li>Spring Security와 JWT를 이용한 인증·인가 구현</li>
-                    <li>게시글과 댓글 CRUD API 구현</li>
-                    <li>전역 예외 처리와 응답 형식 통일</li>
+                    {project.features.map((feature) => (
+                        <li key={feature}>{feature}</li>
+                    ))}
                 </ul>
             </div>
 
             <div className={styles.technologies}>
                 <h4>기술 스택</h4>
-
-                {/* 기술별 색상을 적용할 수 있도록 각각 클래스를 연결 */}
                 <ul>
-                    <li className={styles.java}>Java</li>
-                    <li className={styles.spring}>Spring Boot</li>
-                    <li className={styles.mysql}>MySQL</li>
-                    <li className={styles.jpa}>JPA</li>
+                    {project.technologies.map((technology) => (
+                        <li key={technology.name} className={styles[technology.color]}>
+                            {technology.name}
+                        </li>
+                    ))}
                 </ul>
             </div>
 
-            <footer className={styles.links}>
-                <a
-                    href="https://github.com/dasolsee"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    GitHub ↗
-                </a>
-
-                <a
-                    href="https://github.com/dasolsee"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    README ↗
-                </a>
-            </footer>
+            {(project.github || project.readme) && (
+                <footer className={styles.links}>
+                    {project.github && (
+                        <a href={project.github} target="_blank" rel="noreferrer">
+                            GitHub ↗
+                        </a>
+                    )}
+                    {project.readme && (
+                        <a href={project.readme} target="_blank" rel="noreferrer">
+                            README ↗
+                        </a>
+                    )}
+                </footer>
+            )}
         </article>
     )
 }

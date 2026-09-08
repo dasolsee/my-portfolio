@@ -1,8 +1,9 @@
 import Navigation from '../Navigation/Navigation.tsx'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import styles from './Header.module.css'
 
 function Header() {
+    const { pathname } = useLocation()
     return (
         <header className={styles.header}>
                 <div className={`container ${styles.inner}`}>
@@ -15,7 +16,14 @@ function Header() {
                     {/*오른쪽 메뉴바인 Navigation과 Archive를 하나로 묶어준다*/}
                 <div className={styles.menu}>
                     <Navigation />
-                <Link to ="/archive">Archive</Link>
+                <Link
+                    to="/archive"
+                    aria-current={
+                        pathname === '/archive' || pathname.startsWith('/archive/')
+                            ? 'page'
+                            : undefined
+                    }
+                >Archive</Link>
                 </div>
             </div>
         </header>

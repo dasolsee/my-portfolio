@@ -1,4 +1,5 @@
 import ProjectCard from './ProjectCard'
+import { projects } from '../../../../data/projects'
 import styles from './Projects.module.css'
 
 function Projects() {
@@ -21,8 +22,9 @@ function Projects() {
 
                 {/* 데스크톱 화면에서 프로젝트 카드를 2열로 배치 */}
                 <div className={styles.grid}>
-                    <ProjectCard />
-                    <ProjectCard />
+                    {projects.map((project) => (
+                        <ProjectCard key={project.id} project={project} />
+                    ))}
                 </div>
             </div>
         </section>

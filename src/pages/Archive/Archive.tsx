@@ -1,9 +1,16 @@
 // 선택한 필터와 화면에 표시할 기록 상태를 관리한다.
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import Header from '../../components/common/Header/Header'
-import { supabase } from '../../lib/supabaseClient'
+import {
+    AdminPasswordError,
+    archiveKeys,
+    getArchiveRecords,
+    updateArchiveStatus,
+} from '../../api/archive'
+import type { ArchiveRecord } from '../../api/archive'
 import styles from './Archive.module.css'
 import Footer from '../../components/common/Footer/Footer'
 import ContactButton from '../../components/common/ContactButton/ContactButton'
@@ -12,41 +19,42 @@ import TopButton from '../../components/common/TopButton/TopButton'
 // 필터에는 아래 세 가지 문자열만 사용할 수 있다.
 type Filter = '전체' | '해결' | '미해결'
 
-// Supabase의 archive_records 테이블에서 가져올 기록 형태를 정한다.
-type ArchiveRecord = {
-    id: number
-    created_at: string
-    title: string
-    content: string
-    code_language: string | null
-    code: string | null
-    tags: string | null
-    resolved: boolean
-}
-
 function Archive() {
     const [filter, setFilter] = useState<Filter>('전체')
+    const queryClient = useQueryClient()
+    const {
+        data: records = [],
+        isLoading,
+        isError,
+    } = useQuery({
+        queryKey: archiveKeys.records,
+        queryFn: getArchiveRecords,
+    })
 
-    const [records, setRecords] = useState<ArchiveRecord[]>([])
-
-// Archive 페이지가 처음 나타날 때 Supabase에서 기록을 가져온다.
-    useEffect(() => {
-        async function getRecords() {
-            const { data, error } = await supabase
-                .from('archive_records')
-                .select('*')
-                .order('created_at', { ascending: false })
-
-            if (error) {
-                console.error('기록 조회 실패:', error)
-                return
-            }
-
-            setRecords(data)
-        }
-
-        getRecords()
-    }, [])
+    const statusMutation = useMutation({
+        mutationFn: ({
+            id,
+            resolved,
+            password,
+        }: {
+            id: number
+            resolved: boolean
+            password: string
+        }) => updateArchiveStatus(id, resolved, password),
+        onSuccess: (updatedRecord) => {
+            queryClient.setQueryData<ArchiveRecord[]>(
+                archiveKeys.records,
+                (currentRecords = []) =>
+                    currentRecords.map((record) =>
+                        record.id === updatedRecord.id ? updatedRecord : record
+                    )
+            )
+            queryClient.setQueryData(
+                archiveKeys.record(updatedRecord.id),
+                updatedRecord
+            )
+        },
+    })
 
     // 상태를 변경할 기록의 번호를 기억한다. null이면 확인 창을 닫는다.
     const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -88,46 +96,22 @@ function Archive() {
             return
         }
 
-        // 입력한 비밀번호로 Supabase 관리자 로그인을 시도한다.
-        const { error: loginError } =
-            await supabase.auth.signInWithPassword({
-                email: import.meta.env.VITE_ARCHIVE_ADMIN_EMAIL,
-                password: password,
-            })
-
-        if (loginError) {
-            setPasswordError('비밀번호가 일치하지 않습니다.')
-            return
-        }
-
         const nextResolved = !selectedRecord.resolved
 
-        // 선택한 기록의 해결 여부를 Supabase에서 변경한다.
-        const { error: updateError } = await supabase
-            .from('archive_records')
-            .update({
+        try {
+            await statusMutation.mutateAsync({
+                id: selectedRecord.id,
                 resolved: nextResolved,
+                password,
             })
-            .eq('id', selectedRecord.id)
-
-        if (updateError) {
-            await supabase.auth.signOut()
-            console.error('상태 변경 실패:', updateError)
-            setPasswordError('상태를 변경하지 못했습니다.')
-            return
-        }
-
-        // Supabase 변경에 성공한 경우 화면의 상태도 변경한다.
-        setRecords((currentRecords) =>
-            currentRecords.map((record) =>
-                record.id === selectedRecord.id
-                    ? { ...record, resolved: nextResolved }
-                    : record
+            closeStatusDialog()
+        } catch (error) {
+            setPasswordError(
+                error instanceof AdminPasswordError
+                    ? error.message
+                    : '상태를 변경하지 못했습니다.'
             )
-        )
-
-        await supabase.auth.signOut()
-        closeStatusDialog()
+        }
     }
 
     return (
@@ -171,6 +155,9 @@ function Archive() {
 
                     {/* 필터 조건을 통과한 기록을 각각 하나의 카드로 표시한다. */}
                     <div className={styles.list}>
+                        {isLoading && <p>기록을 불러오는 중입니다.</p>}
+                        {isError && <p>기록을 불러오지 못했습니다.</p>}
+
                         {filteredRecords.map((record) => (
                             <article className={styles.card} key={record.id}>
                                 <div className={styles.cardHeader}>
@@ -229,7 +216,7 @@ function Archive() {
                         ))}
 
                         {/* 조건에 맞는 기록이 없을 때 빈 화면 대신 안내를 표시한다. */}
-                        {filteredRecords.length === 0 && (
+                        {!isLoading && !isError && filteredRecords.length === 0 && (
                             <p className={styles.empty}>
                                 해당하는 기록이 아직 없습니다.
                             </p>
@@ -296,8 +283,9 @@ function Archive() {
                                 <button
                                     type="submit"
                                     className={styles.saveButton}
+                                    disabled={statusMutation.isPending}
                                 >
-                                    저장
+                                    {statusMutation.isPending ? '저장 중...' : '저장'}
                                 </button>
                             </div>
                         </form>
